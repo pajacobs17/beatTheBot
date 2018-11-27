@@ -1,0 +1,77 @@
+Initial Scren - tells the user about the game
+
+Rules page info (roughly):
+	user gets x number of blocks initially. There is a 20 second timer (2 seconds for testing) where the user
+	gets to place their blocks. At this point, the user can see where the items they
+	need to pick-up, and all the spawn locations of enemies except one (to prevent trapping)
+
+
+Gameplay:
+	- 3 enemies will spawn randomly
+	- 2 enemies will guard the items to be picked up (randomly move around in 5x5
+	square)
+		- when the player enters that 5x5 square, the bot will go towards it
+		- users will be able to place blocks by clicking
+	- once a block has been placed, it can not be moved
+		- blocks unplaced in planning phase can be placed during play
+		- they are placed during play by clicking w
+		- can move and place blocks at the same time
+			- will maintain momentum (minus drag each frame)
+			- press e to place a block behind you
+			- at this point, clicking places blocks
+			- provide counter to keep user aware of how many blocks that are left which can be placed
+
+/* goal: player object which allows the player to move above
+   input: the picture which will be the display for the player
+   ouput:
+*/
+Class Player //extends sprite
+
+
+	// constructor
+	// will take in the image to be displayed
+	// has attributes from Sprite in simpleGame (dx, dy, position, etc)
+	// belongs to a canvas element
+	
+
+
+	// dropBlock
+	// goal: put a block sprite on the canvas
+	// input: a key event (event depends on whether in placement or gameplay phase)
+	// output: a block will appear on the screen
+	// if the user is in the placement phase:
+		// when they click on a square, a block will be placed there
+		// one block will be removed from available blocks
+		// make that square unreachable by bots (should be a part of the dijkstras algorithm)
+		
+	//if the user is in the gameplay phase
+		// the block will drop behind the user
+		// "behind" will be determined by the imageAngle of the Sprite
+	
+
+/* goal: create an enemy object which will hunt the player Sprite
+   input: picture which will be the display for the player
+   output: 
+*/
+Class Enemy //extends Sprite	
+	
+
+	// constructor
+	// very similar to the Player object constructor wise at least, will be using the Sprite constructor
+	
+
+	// changeLocation
+	// this is where the meat of the class will be
+	// initially, just do this with Dijstras. Implement it so that the Enemy class will compute the next
+	// best location based upon the location of the object passed in. It will take in that location (it will be
+	// a player object location)
+
+/*
+goals: run the program
+input: none
+output: the refreshed frame which has been drawn on the screen for the suer
+*/
+main()
+	// be sure to update the location of the player object first
+	// that way the bots chasing it are headed towards the "current" location of the Sprite
+	// and not the location it was previously at
