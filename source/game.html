@@ -22,7 +22,7 @@
 	
 </head>
 
-<body style="background-color: #003366;">
+<body onload="init()" style="background-color: #003366;">
 
 	<script>
 
@@ -36,7 +36,15 @@
     var all = document.getElementsByTagName("canvas");
     var canvas = all[0];
 	
-	
+	function init(){
+		game.start();
+		//call update for each object
+    }
+        
+    function update(){
+           
+			
+    }
 	
 	
 	
