@@ -1,53 +1,115 @@
-
+<!DOCTYPE html>
 <html>
-
-<!-- add this back to the top of the page *************************************-->
-<!--<!DOCTYPE html> -->
 
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>Beat the Bot!</title>
+	<title>Welcome</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-	<link href="style.css" rel="css/stylesheet" type="text/css" />
-	
+	<script src = "engine/simpleGame_1_0.js"></script>
+
 	<!--SCRIPTS -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="engine/simpleGame_1_0.js"></script>
 	
-	<!--Class files -->
-
-
+	<!-- priority queue script -->
+	<script src="https://unpkg.com/tinyqueue@2.0.0/tinyqueue.min.js"></script>
+	
+	<!-- class files -->
+	<script src="Enemy.js"></script>
+	<script src="Player.js"></script>
+	<script src="PriorityQueue.js"></script>
 	
 </head>
 
 <body onload="init()" style="background-color: #003366;">
 
 	<script>
-
-	//Game variables
-	var game = new Scene();
-	game.setSize(500, 500);
-	//light blue hex code
-	game.setBG("#ADD8E6");
+		//determines the number of enemies on the board
+		var ENEMIES = 4;
 		
-	//get the canvas elements for the game to allow for dynamic resizing
-    var all = document.getElementsByTagName("canvas");
-    var canvas = all[0];
-	
-	function init(){
-		game.start();
-		//call update for each object
-    }
-        
-    function update(){
-           
+		//setting up the canvas that the game will be played on
+        var game = new Scene();
+		game.setBG("#ADD8E6");
+
+		//get the canvas elements for the game to allow for dynamic resizing
+        var all = document.getElementsByTagName("canvas");
+        var canvas = all[0];
+		
+		var enemyList = [];
+		var player;
+
+		//initializes various elements, including the mower and gnome sprites
+		//creates the initial board of grass sprites, starts the game
+        function init() {
+			for(var i = 0; i < ENEMIES; i++) {
+				enemyList.push(new Enemy(game, "../images/Enemy.png", 20, 20));
+				//enemyList[i].setPosition(400, 400);
+			}			
+			var queue = new PriorityQueue();
+			//priority is cost from node to neighbor, value is current minimum cost to a node
+			queue.push(5, 5);
+			queue.push(4, 4);
+			queue.push(12, 4);
+			queue.push(13, 8);
+			console.log(queue.pop());
+			console.log(queue.pop());
+			console.log(queue.pop());
 			
-    }
-	
-	
-	
+			enemyList[0].setPosition(100, 100);
+			enemyList[1].setPosition(400, 100);
+			enemyList[2].setPosition(400, 400);
+			enemyList[3].setPosition(100, 400);
+			
+			player = new Player(game, "../images/Player.png", 20, 20);
+			player.setPosition(250, 250);
+			
+			
+			
+			
+			
+            game.start();
+        }
+		
+        //is called for every "frame", clears the frame then displays the current state
+        function update() {
+			canvas.setAttribute("id", "gameCanvas");
+			game.clear();
+			for(var i = 0; i < enemyList.length; i++) {
+				checkLoss(enemyList[i]);
+				enemyList[i].draw();	
+			}
+			player.checkKeys();
+			player.draw();	
+        }
+		
+		
+		 /*
+          check whether or not the player has colllided with a Gnome
+          if the player has collided with a Gnome, end the game with an alert and beyond
+          refreshing the page
+        */
+        function checkLoss(enemy) {
+          //if a collision has occured, end the game
+            if (player.collidesWith(enemy)){
+                alert("FAILURE@@@@");
+                game.stop();
+            }
+        }
+		
+		function createGraph() {
+			
+		}
+		
+		function Dijstra(graph, source, destination) {
+			//create vertex set Q
+			var q = [];
+			
+			
+		}
+
+
+		
 	</script>
 </body>
 

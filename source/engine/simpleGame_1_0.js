@@ -4,7 +4,6 @@
    and Scratch
    expects an HTML5-compliant browser
    includes support for mobile browsers
-
    Main code and design: Andy Harris - 2011/2012
    Animation and tile elements by Tyler Mitchell
 */
@@ -29,7 +28,7 @@ function Sprite(scene, imageFile, width, height){
   this.cWidth = parseInt(this.canvas.width);
   this.x = 200;
   this.y = 200;
-  this.dx = 10;
+  this.dx = 0;
   this.dy = 0;
   this.imgAngle = 0;
   this.moveAngle = 0;
@@ -465,12 +464,12 @@ function Scene(){
     
     //dynamically create a canvas element
     this.canvas = document.createElement("canvas");
-    this.canvas.style.backgroundColor = "yellow";
     document.body.appendChild(this.canvas);
     this.context = this.canvas.getContext("2d");
     
     this.clear = function(){
-      this.context.clearRect(0, 0, this.width, this.height);
+      this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      // console.log(this);
     }
 
     this.start = function(){
@@ -585,9 +584,12 @@ function Scene(){
       this.canvas.style.display = "block";
     }
     
-    this.setSize(800, 600);
-    this.setPos(10, 10);
-    this.setBG("lightgray");
+     //Custom syles
+    // this.setSize(1024, 500);
+    this.setBG("#18701E");
+    this.canvas.style.position = "absolute";
+    this.canvas.width  = .75 * window.innerWidth;
+    this.canvas.height = .7 * window.innerHeight;
     
 } // end Scene class def
 
@@ -1011,9 +1013,6 @@ The following classes are experimental, and are not yet
 tested for widespread use.
 They provide tile-based worlds and a camera
 All are by Tyler Mitchell
-
-
-
 function Camera(scene){
   this.canvas = scene.canvas;
   this.context = this.canvas.getContext("2d");
@@ -1058,7 +1057,6 @@ function Camera(scene){
 	else{ return true; }
   }
 }
-
 function Tile( mapX, mapY, x, y, type ){
   this.x = x;
   this.y = y;
@@ -1103,7 +1101,6 @@ function Tile( mapX, mapY, x, y, type ){
 	}
   }
 }
-
 function TileMap(scene){
   this.tileSheet = new Image();
   this.tiles = new Array();
@@ -1282,7 +1279,6 @@ function TileMap(scene){
   
   this.setPosition = function(){}
 }
-
 End of experimental classes
 */
 
