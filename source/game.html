@@ -27,23 +27,32 @@
 	<script>
 		//determines the number of enemies on the board
 		var ENEMIES = 4;
+		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
+		var TIMER = 5000;
 		
 		//setting up the canvas that the game will be played on
         var game = new Scene();
-		game.setBG("#ADD8E6");
-
-		//get the canvas elements for the game to allow for dynamic resizing
-        var all = document.getElementsByTagName("canvas");
-        var canvas = all[0];
 		
+		//list of enemies for pathing in game`
 		var enemyList = [];
 		var player;
 		
+		//board Sprite
 		var board;
+		
+		//canvas variables allow for accessing height and width throughout program
+		var canvas;
 
 		//initializes various elements, including the mower and gnome sprites
 		//creates the initial board of grass sprites, starts the game
         function init() {
+			//get the canvas elements for the game to allow for dynamic resizing
+			var all = document.getElementsByTagName("canvas");
+			canvas = all[0];
+			
+			//settting background
+			game.setBG("#ADD8E6");
+			
 			for(var i = 0; i < ENEMIES; i++) {
 				enemyList.push(new Enemy(game, "../images/Enemy.png", 20, 20));
 				//enemyList[i].setPosition(400, 400);
@@ -61,7 +70,10 @@
 			
 			createBoard();
 			
+			setupPhase();
+			
             game.start();
+			
         }
 		
 		function createBoard() {
@@ -99,7 +111,24 @@
 			player.draw();	
         }
 		
-		
+		function setupPhase() {
+			var countTo = new Date().getTime() + TIMER;
+			
+			var sec = setInterval(function() {
+				var now = new Date().getTime();
+				
+				var timeLeft = countTo - now;
+				
+				var seconds = Math.floor((timeLeft % (1000 * 60))/1000);
+				
+				console.log(seconds)
+				
+				if(timeLeft < 0) {
+					console.log("end the set-up phase");
+				}
+			}, 1000);
+		}
+
 		 /*
           check whether or not the player has colllided with a Gnome
           if the player has collided with a Gnome, end the game with an alert and beyond
