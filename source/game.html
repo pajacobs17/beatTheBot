@@ -38,6 +38,8 @@
 		
 		var enemyList = [];
 		var player;
+		
+		var board;
 
 		//initializes various elements, including the mower and gnome sprites
 		//creates the initial board of grass sprites, starts the game
@@ -46,15 +48,8 @@
 				enemyList.push(new Enemy(game, "../images/Enemy.png", 20, 20));
 				//enemyList[i].setPosition(400, 400);
 			}			
-			var queue = new PriorityQueue();
+			board = new Array();
 			//priority is cost from node to neighbor, value is current minimum cost to a node
-			queue.push(5, 5);
-			queue.push(4, 4);
-			queue.push(12, 4);
-			queue.push(13, 8);
-			console.log(queue.pop());
-			console.log(queue.pop());
-			console.log(queue.pop());
 			
 			enemyList[0].setPosition(100, 100);
 			enemyList[1].setPosition(400, 100);
@@ -64,17 +59,38 @@
 			player = new Player(game, "../images/Player.png", 20, 20);
 			player.setPosition(250, 250);
 			
-			
-			
-			
+			createBoard();
 			
             game.start();
         }
 		
+		function createBoard() {
+			var count = 0;
+			var height = canvas.clientHeight;
+			var width = canvas.clientWidth;
+			var squareHeight = height/50;
+			var squareWidth = height/50;
+			
+			for(var i = squareWidth/2; i <= width; i += squareWidth) {
+				for(var j = squareHeight/2; j <= height; j += squareHeight) {
+					board.push(new Sprite(game, "../images/square.jpg", squareWidth, squareHeight));
+					board[count].setPosition(i, j);
+					board[count].update();
+					count++;
+				}
+			}
+		}
+		
         //is called for every "frame", clears the frame then displays the current state
         function update() {
-			canvas.setAttribute("id", "gameCanvas");
+		
 			game.clear();
+			
+			for(var i = 0; i < board.length; i++) {
+				board[i].update();
+				board[i].draw();
+			}
+
 			for(var i = 0; i < enemyList.length; i++) {
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
@@ -108,7 +124,7 @@
 			
 		}
 
-
+		
 		
 	</script>
 </body>
