@@ -88,7 +88,7 @@
 			var x = event.x - canvas.offsetLeft;
 			var y = event.y - canvas.offsetTop;
 			
-			console.log(nodeClicked(x, y));
+			nodeClicked(x, y);
 		}
 		
 		//create the board 2d array with all the node elements inside it
@@ -108,7 +108,7 @@
 				board[columnIndex] = new Array();
 				//adds the node at the given row and column
 				for(var j = squareWidth/2; j <= canvas.clientWidth; j += squareWidth) {
-					board[columnIndex][rowIndex] = new Sprite(game, "../images/square.jpg", squareWidth, squareHeight);
+					board[columnIndex][rowIndex] = new Node(game, "../images/Square.jpg", squareWidth, squareHeight);
 					board[columnIndex][rowIndex].setPosition(j, i);
 					rowIndex++;	
 				}
@@ -125,15 +125,15 @@
 			//set position to the location clicked and draw it
 			tempSprite.setPosition(x, y);
 			tempSprite.update();
+			//go through all the nodes, change the image of the node clicked
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
 					if(board[i][j].collidesWith(tempSprite)) {
-						return [i, j];
+						board[i][j].makeWall()
+						console.log(i + ", " + j);
 					}
 				}
 			}
-			//for testing purposes
-			return -1;
 		}
 		
         //is called for every "frame", clears the frame then displays the current state
