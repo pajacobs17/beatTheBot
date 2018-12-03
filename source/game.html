@@ -32,13 +32,20 @@
 		var TIMER = 5000;
 		//number of squares, canvas height will be divided by italic
 		var SQUARES = 5;
+		//number of fish to be picked up, will be randomly placed
+		var FISH = 3;
 		
 		//setting up the canvas that the game will be played on
         var game;
 		
-		//list of enemies for pathing in game`
+		//list of enemies for pathing in game
 		var enemyList = [];
+		
+		//var for player sprite
 		var player;
+		
+		//var for fish list (item to be picked up for win condition)
+		var fishList = [];
 		
 		//board Sprite
 		var board;
@@ -46,7 +53,6 @@
 		//canvas variables allow for accessing height and width throughout program
 		var canvas;
 		
-
 
 		//initializes various elements, including the mower and gnome sprites
 		//creates the initial board of grass sprites, starts the game
@@ -60,6 +66,8 @@
 			
 			//settting background
 			game.setBG("#ADD8E6");
+			
+			console.log(randPos());
 			
 			for(var i = 0; i < ENEMIES; i++) {
 				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 2));
@@ -75,15 +83,24 @@
 			//enemyList[3].setPosition(100, 400);
 			
 			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES);
-			player.setPosition(500, 500);
+			player.setPosition(canvas.clientWidth/(SQUARES - 1), canvas.clientHeight/(SQUARES - 1));
 			
 			createBoard();
+			
+			for(var i = 0; i < FISH; i++) {
+				fishList[i] = new Sprite(game, "../images/fish.jpg", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
+				var pos = randPos();
+				fishList[i].x = pos[0];
+				fishList[i].y = pos[1];
+			}
 			
 			setupPhase();
 			
             game.start();
 			
         }
+		
+		
 		//function to handle when the canvas is clicked, e is the click event
 		function onClick(e) {
 			var x = event.x - canvas.offsetLeft;
@@ -96,6 +113,23 @@
 				}
 			}
 		}
+		
+		 /* function should return a location within bounds of canvas */
+        function randPos(){
+          //setting max and min to make fish will be within bounds of canvas
+          var heightMax = canvas.clientHeight - canvas.clientHeight/SQUARES;
+		  var heightMin = canvas.clientHeight/SQUARES;
+		  
+		  //same for width
+		  var widthMax = canvas.clientWidth - canvas.clientWidth/SQUARES;
+          var widthMin = canvas.clientHeight/SQUARES;
+		  
+		  
+          var randX = Math.floor(Math.random() * (widthMax - widthMin)) + widthMin;
+		  var randY = Math.floor(Math.random() * (heightMax - heightMin)) + widthMin;
+		  
+          return [randX, randY];
+        }
 		
 		//create the board 2d array with all the node elements inside it
 		function createBoard() {
@@ -170,11 +204,22 @@
 					board[i][j].update();
 				}
 			}
-
+			
+			//hides the fish if the player has picked it up
+			//*************************** program for win condition
+			for(var i = 0; i < fishList.length; i++) {
+				if(player.collidesWith(fishList[i])) {
+					fishList[i].hide();
+				}
+				fishList[i].update();
+			}
+			//check for loss, when enemy sprite has hit player sprite
 			for(var i = 0; i < enemyList.length; i++) {
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
 			}
+			//if/else for handling when a player runs into wall, currently not working
+			//***********************************
 			if(hitWall == false) {
 				player.setSpeed(5);
 				player.checkKeys();
