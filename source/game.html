@@ -88,8 +88,13 @@
 		function onClick(e) {
 			var x = event.x - canvas.offsetLeft;
 			var y = event.y - canvas.offsetTop;
-			
-			console.log(nodeClicked(x, y));
+			//if the player has walls remainign
+			if(player.walls > 0) {
+				//if a wall was placed, remove a wall from the player's inventory
+				if(nodeClicked(x, y) == true) {
+					player.walls -= 1;
+				}
+			}
 		}
 		
 		//create the board 2d array with all the node elements inside it
@@ -128,7 +133,6 @@
 			tempSprite.update();
 			
 			if(tempSprite.collidesWith(player)) {
-				console.log("collides with player");
 				return false;
 			}
 		
@@ -136,7 +140,6 @@
 			//checks to make sure that walls can't be placed where sprite currently are
 			for(var i = 0; i < enemyList.length; i++) {
 				if(tempSprite.collidesWith(enemyList[i])) {
-					console.log("collides with enemy");
 					return false;
 				}
 			}
