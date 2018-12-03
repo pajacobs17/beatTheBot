@@ -1,4 +1,5 @@
 function Node(scene, src, width, height) {
+	
 	var aNode = new Sprite(scene, src, width, height);
 	
 	//for dijstras algorithm
