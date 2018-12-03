@@ -83,7 +83,7 @@
 			//enemyList[3].setPosition(100, 400);
 			
 			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES);
-			player.setPosition(canvas.clientWidth/(SQUARES - 1), canvas.clientHeight/(SQUARES - 1));
+			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
 			createBoard();
 			
