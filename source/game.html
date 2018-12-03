@@ -20,6 +20,7 @@
 	<script src="Player.js"></script>
 	<script src="Node.js"></script>
 	<script src="priority-queue.js"></script>
+	<script src="Queue.js"></script>
 	<!--<script src="PriorityQueue.js"></script> -->
 	
 </head>
@@ -27,7 +28,7 @@
 <body onload="init()" style="background-color: #003366;">
 
 	<script>
-		var queue = new PriorityQueue();
+		var queue = new Queue();
 		//determines the number of enemies on the board
 		var ENEMIES = 1;
 		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
@@ -95,6 +96,8 @@
 				fishList[i].y = board[pos[0]][pos[1]].y;
 			}
 			
+			createGraph();
+			
 			setupPhase();
 			
             game.start();		
@@ -116,12 +119,12 @@
 		
 		 /* function should return a location within bounds of canvas */
         function randNode(){
-          //generate random number for a random x index of the board
-			var randX = Math.floor(Math.random() * (board.length - 0));
-			//same but for y
-			var randY = Math.floor(Math.random() * (board[0].length - 0));
+          //generate random number for a random row index of the board
+			var randRow = Math.floor(Math.random() * (board.length - 0));
+			//same but for column
+			var randCol = Math.floor(Math.random() * (board[0].length - 0));
 		  
-          return [randX, randY];
+          return [randRow, randCol];
         }
 		
 		//create the board 2d array with all the node elements inside it
@@ -183,10 +186,6 @@
 			return false;
 		}
 		
-		function checkWin() {
-		
-		}
-		
         //is called for every "frame", clears the frame then displays the current state
         function update() {
 			var hitWall = false;
@@ -203,7 +202,6 @@
 			}
 			
 			//hides the fish if the player has picked it up
-			//*************************** program for win condition
 			for(var i = 0; i < fishList.length; i++) {
 				if(player.collidesWith(fishList[i])) {
 					fishList[i].hide();
@@ -263,18 +261,62 @@
             }
         }
 		
+		function checkWin() {
+			for(var i = 0; i < fishList.length; i++) {
+				//if any of the fish are visible, i.e. not picked up, end the function
+				if(fishList[i].visible == true) {
+					return;
+				}
+			}
+			//tell the user they have won and stop the game
+			alert("You have won");
+			
+			game.stop();
+		}
+		
+		//BFS shortest path implementation
+		function find_path(graph, start, goal) {
+			var visited = [];
+			var queue = new Queue();
+			
+			if(start == goal) {
+				//do nothing, checkLoss should trigger in update() function
+			}
+			
+			while(queue) {
+				var path = queue.pop();
+				
+				
+			}
+		}	
+		
 		function createGraph() {
-			
+			for(var i = 0; i < board.length; i++) {
+				for(var j = 0; j < board[i].length; j++) {
+					//adding neighbors to each node of the graph, checking bounds to make sure
+					//all are within the array
+					var n1, n2, n3, n4;
+					if(i > 0) {
+						n1 = board[i - 1][j];
+						board[i][j].neighbors.push(n1);
+					}
+					//board.length -1 to get the last index, it's a square board matrix so using i or j won't matter for
+					//checking if the arrays is in bounds
+					if(i < board.length - 1) {
+						n2 = board[i+1][j];
+						board[i][j].neighbors.push(n2);
+					}
+					if(j > 0) {
+						n3 = board[i][j - 1];
+						board[i][j].neighbors.push(n3);
+					}
+					if(j < board.length - 1) {
+						n4 = board[i][j + 1];
+						board[i][j].neighbors.push(n4);
+					}
+				}
+			}
 		}
-		
-		function Dijstra(graph, source, destination) {
-			//create vertex set Q
-			var q = [];
-			
-			
-		}
-
-		
 		
 	</script>
 </body>

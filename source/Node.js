@@ -7,6 +7,8 @@ function Node(scene, src, width, height) {
 	//is this variable is true, then the "wall" barrier image will be displayed and that node is no longer walkable
 	aNode.isWall = false;
 	
+	aNode.neighbors = [];
+	
 	aNode.makeWall = function () {
 		if(aNode.isWall == false) {
 			aNode.isWall = true;
