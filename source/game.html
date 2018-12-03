@@ -55,7 +55,6 @@
 		//canvas variables allow for accessing height and width throughout program
 		var canvas;
 		
-
 		//initializes various elements, including the mower and gnome sprites
 		//creates the initial board of grass sprites, starts the game
         function init() {
@@ -70,37 +69,35 @@
 			//settting background
 			game.setBG("#ADD8E6");
 			
-			console.log(randPos());
-			
-			for(var i = 0; i < ENEMIES; i++) {
-				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
-				//enemyList[i].setPosition(400, 400);
-			}			
 			board = new Array();
-			//priority is cost from node to neighbor, value is current minimum cost to a node
-			
-			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
-			var pos = [(canvas.clientHeight - canvas.clientHeight/SQUARES), (canvas.clientWidth - canvas.clientWidth/SQUARES)];
-			//enemyList[1].setPosition(pos[0], pos[1]);
-			//enemyList[2].setPosition(400, 400);
-			//enemyList[3].setPosition(100, 400);
-			
-			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 3);
-			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
 			createBoard();
 			
+			for(var i = 0; i < ENEMIES; i++) {
+				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
+			}			
+			//priority is cost from node to neighbor, value is current minimum cost to a node
+			
+			//just for testing***************************
+			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
+			
+
+			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 3);
+			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
+			
+			//create all the fish objects
 			for(var i = 0; i < FISH; i++) {
 				fishList[i] = new Sprite(game, "../images/fish.jpg", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
-				var pos = randPos();
-				fishList[i].x = pos[0];
-				fishList[i].y = pos[1];
+				var pos = randNode();
+				//makes the fishes location the same as a square (or node) on the board
+				console.log(pos[0] + ", " + pos[1]);
+				fishList[i].x = board[pos[0]][pos[1]].x;
+				fishList[i].y = board[pos[0]][pos[1]].y;
 			}
 			
 			setupPhase();
 			
-            game.start();
-			
+            game.start();		
         }
 		
 		
@@ -118,18 +115,11 @@
 		}
 		
 		 /* function should return a location within bounds of canvas */
-        function randPos(){
-          //setting max and min to make fish will be within bounds of canvas
-          var heightMax = canvas.clientHeight - canvas.clientHeight/SQUARES;
-		  var heightMin = canvas.clientHeight/SQUARES;
-		  
-		  //same for width
-		  var widthMax = canvas.clientWidth - canvas.clientWidth/SQUARES;
-          var widthMin = canvas.clientHeight/SQUARES;
-		  
-		  
-          var randX = Math.floor(Math.random() * (widthMax - widthMin)) + widthMin;
-		  var randY = Math.floor(Math.random() * (heightMax - heightMin)) + widthMin;
+        function randNode(){
+          //generate random number for a random x index of the board
+			var randX = Math.floor(Math.random() * (board.length - 0));
+			//same but for y
+			var randY = Math.floor(Math.random() * (board[0].length - 0));
 		  
           return [randX, randY];
         }
