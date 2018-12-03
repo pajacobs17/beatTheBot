@@ -2,7 +2,7 @@ function Player(canvas, src, width, height, walls) {
 	
 	var aPlayer = new Sprite(canvas, src, width, height);
 	
-	aPlayer.setSpeed(10);
+	aPlayer.setSpeed(5);
 	aPlayer.setBoundAction(3);
 	
 	aPlayer.walls = walls;

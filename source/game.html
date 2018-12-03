@@ -27,7 +27,7 @@
 
 	<script>
 		//determines the number of enemies on the board
-		var ENEMIES = 4;
+		var ENEMIES = 1;
 		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
 		var TIMER = 5000;
 		//number of squares, canvas height will be divided by italic
@@ -70,7 +70,7 @@
 			
 			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
 			var pos = [(canvas.clientHeight - canvas.clientHeight/SQUARES), (canvas.clientWidth - canvas.clientWidth/SQUARES)];
-			enemyList[1].setPosition(pos[0], pos[1]);
+			//enemyList[1].setPosition(pos[0], pos[1]);
 			//enemyList[2].setPosition(400, 400);
 			//enemyList[3].setPosition(100, 400);
 			
@@ -158,11 +158,15 @@
 		
         //is called for every "frame", clears the frame then displays the current state
         function update() {
-		
+			var hitWall = false;
+			
 			game.clear();
 			
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
+					if(board[i][j].collidesWith(player) && board[i][j].isWall == true) {
+						hitWall = true;
+					}
 					board[i][j].update();
 				}
 			}
@@ -171,7 +175,13 @@
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
 			}
-			player.checkKeys();
+			if(hitWall == false) {
+				player.setSpeed(5);
+				player.checkKeys();
+			}
+			else {
+				player.setSpeed(0);
+			}
 			player.draw();	
         }
 		
@@ -184,7 +194,7 @@
 				var timeLeft = countTo - now;
 				
 				var seconds = Math.floor((timeLeft % (1000 * 60))/1000);
-				
+				//**************************** output to html element **********************
 				console.log(seconds)
 				
 				if(timeLeft <= 0) {
@@ -201,7 +211,7 @@
         function checkLoss(enemy) {
           //if a collision has occured, end the game
             if (player.collidesWith(enemy)){
-                alert("FAILURE@@@@");
+                alert("You have lost");
                 game.stop();
             }
         }
