@@ -19,6 +19,7 @@
 	<script src="Enemy.js"></script>
 	<script src="Player.js"></script>
 	<script src="Node.js"></script>
+	<script src="priority-queue.js"></script>
 	<!--<script src="PriorityQueue.js"></script> -->
 	
 </head>
@@ -26,12 +27,13 @@
 <body onload="init()" style="background-color: #003366;">
 
 	<script>
+		var queue = new PriorityQueue();
 		//determines the number of enemies on the board
 		var ENEMIES = 1;
 		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
 		var TIMER = 5000;
-		//number of squares, canvas height will be divided by italic
-		var SQUARES = 5;
+		//NxN dimensions of the matrix, also determines number of walls that player gets (3X currently)
+		var SQUARES = 10;
 		//number of fish to be picked up, will be randomly placed
 		var FISH = 3;
 		
@@ -57,6 +59,7 @@
 		//initializes various elements, including the mower and gnome sprites
 		//creates the initial board of grass sprites, starts the game
         function init() {
+			
 			game = new Scene();
 			//get the canvas elements for the game to allow for dynamic resizing
 			var all = document.getElementsByTagName("canvas");
@@ -70,7 +73,7 @@
 			console.log(randPos());
 			
 			for(var i = 0; i < ENEMIES; i++) {
-				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 2));
+				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
 				//enemyList[i].setPosition(400, 400);
 			}			
 			board = new Array();
@@ -82,7 +85,7 @@
 			//enemyList[2].setPosition(400, 400);
 			//enemyList[3].setPosition(100, 400);
 			
-			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES);
+			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 3);
 			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
 			createBoard();
@@ -190,6 +193,10 @@
 			return false;
 		}
 		
+		function checkWin() {
+		
+		}
+		
         //is called for every "frame", clears the frame then displays the current state
         function update() {
 			var hitWall = false;
@@ -213,6 +220,11 @@
 				}
 				fishList[i].update();
 			}
+			
+			//after checking collisions for each fish, check if the win condition is fulfilled			
+			checkWin();
+			
+			
 			//check for loss, when enemy sprite has hit player sprite
 			for(var i = 0; i < enemyList.length; i++) {
 				checkLoss(enemyList[i]);
