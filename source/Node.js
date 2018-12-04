@@ -13,8 +13,10 @@ function Node(scene, src, width, height) {
 		if(aNode.isWall == false) {
 			aNode.isWall = true;
 			aNode.setImage("../images/wall.png");
+
 		}
 	}
+	
 	
 	return aNode;
 }

@@ -7,6 +7,7 @@
 	<title>Welcome</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="css/style.css">
+
 	<script src = "engine/simpleGame_1_0.js"></script>
 
 	<!--SCRIPTS -->
@@ -37,13 +38,13 @@
 	<script>
 		var queue = new Queue();
 		//determines the number of enemies on the board
-		var ENEMIES = 1;
+		var ENEMIES = 4;
 		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
 		var TIMER = 5000;
 		//NxN dimensions of the matrix, also determines number of walls that player gets (3X currently)
 		var SQUARES = 10;
 		//number of fish to be picked up, will be randomly placed
-		var FISH = 3;
+		var FISH = 4;
 		
 		//setting up the canvas that the game will be played on
         var game;
@@ -83,6 +84,7 @@
 			createBoard();
 			
 			for(var i = 0; i < ENEMIES; i++) {
+
 				enemyList.push(new Enemy(game, "../images/penguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
 			}			
 			//priority is cost from node to neighbor, value is current minimum cost to a node
@@ -90,8 +92,20 @@
 			//just for testing***************************
 			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
 			
+				enemyList.push(new Enemy(game, "../images/EskimoFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES)-10);
+				
+				randIndex = randNode();
+				randRow = randIndex[0];
+				randCol = randIndex[1];
+				
+				x = board[randRow][randCol].x;
+				y = board[randRow][randCol].y;
+				
+				enemyList[i].setPosition(x, y);
+			}
 
-			player = new Player(game, "../images/EskimoFront.png", canvas.clientWidth/(SQUARES*2), (canvas.clientHeight/SQUARES)-10, SQUARES * 3);
+				player = new Player(game, "../images/EskimoFront.png", canvas.clientWidth/(SQUARES*2), (canvas.clientHeight/SQUARES)-10, SQUARES * 3);
+
 			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
 			//create all the fish objects
@@ -134,6 +148,10 @@
 			var randRow = Math.floor(Math.random() * (board.length - 0));
 			//same but for column
 			var randCol = Math.floor(Math.random() * (board[0].length - 0));
+			
+			if(board[randRow][randCol].isWall == true) {
+				randNode();
+			}
 		  
           return [randRow, randCol];
         }
@@ -166,31 +184,41 @@
 			}
 		}	
 		
-		function nodeClicked(x, y) {
+
+		function drawTempSprite(x, y) {
 			//i will create a sprite at the location of the click and test it against each node to detect collision
 			var tempSprite = new Sprite(game, "../images/collision.jpg", 1, 1);
 			//set position to the location clicked and draw it
 			tempSprite.setPosition(x, y);
 			tempSprite.update();
-			
-
+		
+			return tempSprite;
+		}
+		
+		
+		function nodeClicked(x, y) {	
+			//i will create a sprite at the location of the click and test it against each node to detect collision
+			var tempSprite = drawTempSprite(x, y);
+      
 			if(tempSprite.collidesWith(player)) {
+				player.setSpeed(0);
 				return false;
 			}
 		
-			
-			//checks to make sure that walls can't be placed where sprite currently are
+			//same for enemies
 			for(var i = 0; i < enemyList.length; i++) {
 				if(tempSprite.collidesWith(enemyList[i])) {
 					return false;
 				}
 			}
+			
 
 			//go through all the nodes, change the image of the node clicked
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
 					if(board[i][j].collidesWith(tempSprite) && board[i][j].isWall == false) {
-						board[i][j].makeWall()
+						board[i][j].makeWall();
+						//change the cost to infinity so AI will never move towards it
 						return true;
 					}
 				}
@@ -200,19 +228,22 @@
 		
         //is called for every "frame", clears the frame then displays the current state
         function update() {
-			var hitWall = false;
-			
+			//erase previous frame
 			game.clear();
 			
+			//goes through all the nodes seeing if the player has hit any that are walls
+			//if the player has, set hitWall to true and that will be handled
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
 					if(board[i][j].collidesWith(player) && board[i][j].isWall == true) {
-						hitWall = true;
+						//if/else for handling when a player runs into wall, currently not working
+						//***********************************
 					}
 					board[i][j].update();
 				}
 			}
-			
+			player.checkKeys();
+
 			//hides the fish if the player has picked it up
 			for(var i = 0; i < fishList.length; i++) {
 				if(player.collidesWith(fishList[i])) {
@@ -225,19 +256,35 @@
 			checkWin();
 			
 			
-			//check for loss, when enemy sprite has hit player sprite
+			//iterates through each enemy in the enemyList
 			for(var i = 0; i < enemyList.length; i++) {
+				//tempSprite1 will be used to see if the player is in the node
+				//tempSprite2 will be used to see if the enemy is in the node
+				//create them using the current x and y of the player and the current enemy
+				var tempSprite1 = drawTempSprite(player.x, player.y);
+				var tempSprite2 = drawTempSprite(enemyList[i].x, enemyList[i].y);
+				
+				var start;
+				var goal;
+				
+				for(var j = 0; j < board.length; j++) {
+					for(var k = 0; k < board[j].length; k++) {
+						//performance could be improved by removing this from the enemyList for loop potentially
+						//not necessarily worth it
+						if(board[j][k].collidesWith(tempSprite1)) {
+							goal = board[j][k];
+						}
+						if(board[j][k].collidesWith(tempSprite2)) {
+							start = board[j][k];
+						}
+					}
+				}
+
+				//calculates the nextMove for the enemy
+				enemyList[i].nextMove(start, goal);
+				//check for a loss and then draw the enemy
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
-			}
-			//if/else for handling when a player runs into wall, currently not working
-			//***********************************
-			if(hitWall == false) {
-				player.setSpeed(5);
-				player.checkKeys();
-			}
-			else {
-				player.setSpeed(0);
 			}
 			player.draw();	
         }
@@ -284,22 +331,6 @@
 			
 			game.stop();
 		}
-		
-		//BFS shortest path implementation
-		function find_path(graph, start, goal) {
-			var visited = [];
-			var queue = new Queue();
-			
-			if(start == goal) {
-				//do nothing, checkLoss should trigger in update() function
-			}
-			
-			while(queue) {
-				var path = queue.pop();
-				
-				
-			}
-		}	
 		
 		function createGraph() {
 			for(var i = 0; i < board.length; i++) {
