@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width">
 	<title>Welcome</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/style.css">
 	<script src = "engine/simpleGame_1_0.js"></script>
 
 	<!--SCRIPTS -->
@@ -188,19 +189,24 @@
 		
         //is called for every "frame", clears the frame then displays the current state
         function update() {
-			var hitWall = false;
-			
+			//erase previous frame
 			game.clear();
 			
+			//var hitWall = false;
+			
+			//goes through all the nodes seeing if the player has hit any that are walls
+			//if the player has, set hitWall to true and that will be handled
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
 					if(board[i][j].collidesWith(player) && board[i][j].isWall == true) {
-						hitWall = true;
+						//if/else for handling when a player runs into wall, currently not working
+						//***********************************
 					}
 					board[i][j].update();
 				}
 			}
-			
+			player.checkKeys();
+
 			//hides the fish if the player has picked it up
 			for(var i = 0; i < fishList.length; i++) {
 				if(player.collidesWith(fishList[i])) {
@@ -215,17 +221,9 @@
 			
 			//check for loss, when enemy sprite has hit player sprite
 			for(var i = 0; i < enemyList.length; i++) {
+			
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
-			}
-			//if/else for handling when a player runs into wall, currently not working
-			//***********************************
-			if(hitWall == false) {
-				player.setSpeed(5);
-				player.checkKeys();
-			}
-			else {
-				player.setSpeed(0);
 			}
 			player.draw();	
         }
@@ -274,21 +272,29 @@
 			game.stop();
 		}
 		
-		//BFS shortest path implementation
-		function find_path(graph, start, goal) {
-			var visited = [];
-			var queue = new Queue();
-			
-			if(start == goal) {
-				//do nothing, checkLoss should trigger in update() function
-			}
-			
-			while(queue) {
-				var path = queue.pop();
+		//calculates the next node to move towards and then the movement in the x and y axis required to go towards
+		//that node. Sets the enemy to move in that x and y direction
+		function nextMove(start, goal, enemy) {
+			//keeps track of the currentBest neighborNode (given by its index of the start node) and its distance from the player
+			//initial best value is null with a cost of infinity
+			var currentBest = [null, Infinity];
+			for(var i = 0; i < start.neighbors.length; i++) {
+				var xLeft = Math.abs(goal.x - start.x);
+				var yLeft = Math.abs(goal.y - start.y);
 				
-				
+				value = x + y;
+				//the current value will be replaced if it is higher
+				if(value > currentBest[1]) {
+					currentBest[0] = i;
+					currentBest[1] = value;
+				}
 			}
-		}	
+			calculateMove(currentBest);
+		}
+		
+		function calculateMove(currentBest) {
+			//if(board[x] - 
+		}
 		
 		function createGraph() {
 			for(var i = 0; i < board.length; i++) {
