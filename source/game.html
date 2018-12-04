@@ -28,10 +28,15 @@
 </head>
 
 <body onload="init()" style="background-color: #003366;">
+	<!-- Scoreboard contains back button and number of walls left -->
 	<div id="scoreBoard">
 		<a href="welcome.html">
 			  <span class="glyphicon glyphicon-arrow-left"></span> BACK
 			</a>
+			
+			
+			<span class="rightText" id="numOfWalls"></span>
+			<span class="rightText"><b>Number of walls:  </b> </span>
 		</div>
 
 
@@ -109,6 +114,9 @@
 				fishList[i].x = board[pos[0]][pos[1]].x;
 				fishList[i].y = board[pos[0]][pos[1]].y;
 			}
+
+			//Set up Scoreboard
+			document.getElementById("numOfWalls").innerHTML = player.walls;
 			
 			createGraph();
 			
@@ -131,6 +139,7 @@
 				//if a wall was placed, remove a wall from the player's inventory
 				if(nodeClicked(x, y) == true) {
 					player.walls -= 1;
+					document.getElementById("numOfWalls").innerHTML = player.walls;
 				}
 			}
 		}
@@ -307,8 +316,7 @@
         function checkLoss(enemy) {
           //if a collision has occured, end the game
             if (player.collidesWith(enemy)){
-                alert("You have lost");
-                game.stop();
+				window.location.replace("lose.html");
             }
         }
 		
@@ -320,9 +328,8 @@
 				}
 			}
 			//tell the user they have won and stop the game
-			alert("You have won");
+			window.location.replace("win.html");
 			
-			game.stop();
 		}
 		
 		function createGraph() {

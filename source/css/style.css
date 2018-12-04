@@ -34,3 +34,8 @@ body {
   padding: 2%;
   z-index: 999;
 }
+
+.rightText {
+float:right;
+margin-right: 1%;
+}
