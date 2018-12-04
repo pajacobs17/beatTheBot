@@ -31,13 +31,13 @@
 	<script>
 		var queue = new Queue();
 		//determines the number of enemies on the board
-		var ENEMIES = 1;
+		var ENEMIES = 4;
 		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
 		var TIMER = 5000;
 		//NxN dimensions of the matrix, also determines number of walls that player gets (3X currently)
 		var SQUARES = 10;
 		//number of fish to be picked up, will be randomly placed
-		var FISH = 3;
+		var FISH = 4;
 		
 		//setting up the canvas that the game will be played on
         var game;
@@ -77,14 +77,18 @@
 			
 			for(var i = 0; i < ENEMIES; i++) {
 				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
-			}			
-			//priority is cost from node to neighbor, value is current minimum cost to a node
-			
-			//just for testing***************************
-			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
-			
+				
+				randIndex = randNode();
+				randRow = randIndex[0];
+				randCol = randIndex[1];
+				
+				x = board[randRow][randCol].x;
+				y = board[randRow][randCol].y;
+				
+				enemyList[i].setPosition(x, y);
+			}
 
-			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 3);
+			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES - 10, canvas.clientHeight/SQUARES - 10, SQUARES * 3);
 			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
 			//create all the fish objects
@@ -124,6 +128,10 @@
 			var randRow = Math.floor(Math.random() * (board.length - 0));
 			//same but for column
 			var randCol = Math.floor(Math.random() * (board[0].length - 0));
+			
+			if(board[randRow][randCol].isWall == true) {
+				randNode();
+			}
 		  
           return [randRow, randCol];
         }
@@ -190,7 +198,6 @@
 					if(board[i][j].collidesWith(tempSprite) && board[i][j].isWall == false) {
 						board[i][j].makeWall();
 						//change the cost to infinity so AI will never move towards it
-						board[i][j].cost = Infinity;
 						return true;
 					}
 				}

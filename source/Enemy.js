@@ -11,26 +11,49 @@ function Enemy(canvas, src, width, height) {
 		//initial best value is null with a cost of infinity
 		var currentBest = [null, Infinity];
 		for(var i = 0; i < start.neighbors.length; i++) {
-			var xLeft = Math.abs(goal.x - start.neighbors[i].x);
-			var yLeft = Math.abs(goal.y - start.neighbors[i].y);
-			
-			value = xLeft + yLeft;
-			//the current value will be replaced if it is higher
-			if(value < currentBest[1]) {
-				currentBest[0] = i;
-				currentBest[1] = value;
+			//only if the neighbor is not a wall do I treat it as walkable
+			if(start.neighbors[i].isWall == false) {
+				var xLeft = Math.abs(goal.x - start.neighbors[i].x);
+				var yLeft = Math.abs(goal.y - start.neighbors[i].y);
+				value = xLeft + yLeft;
+				//the current value will be replaced if it is higher
+				if(value < currentBest[1]) {
+					currentBest[0] = i;
+					currentBest[1] = value;
+				}
 			}
 		}
-		console.log(currentBest);
-		aEnemy.calculateMove(start, currentBest);
+		//console.log(currentBest);
+		//console.log(start);
+		//pass on the neighbor number that will be the enemies new target
+		aEnemy.calculateMove(start, currentBest[0]);
 	}
 		
-	aEnemy.calculateMove = function(start, currentBest) {
+	aEnemy.calculateMove = function(start, index) {
 			//get the node that the enemy will now be moving towards
-			var moveTowards = start.neighbors[currentBest[0]];
+			var moveTowards = start.neighbors[index];
 			//now to calculate the movement in the x and y required for the enemy
 			var x = moveTowards.x - start.x;
 			var y = moveTowards.y - start.y;
+		
+			console.log("x, y: " + x + ", " + y);
+			console.log(moveTowards);
+			
+			if(x > 0) {
+				aEnemy.changeXby(5);
+			}
+			else if(x < 0) {
+				aEnemy.changeXby(-5);
+			}
+			else if(y > 0) {
+				console.log("y` is +");
+				aEnemy.changeYby(5);
+			}
+			//y < 0
+			else {
+				console.log("y is -");
+				aEnemy.changeYby(-5);
+			}
 		}
 		
 	return aEnemy;
