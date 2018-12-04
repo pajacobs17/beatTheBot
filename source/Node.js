@@ -12,8 +12,8 @@ function Node(scene, src, width, height) {
 	aNode.makeWall = function () {
 		if(aNode.isWall == false) {
 			aNode.isWall = true;
-			aNode.cost = Infinity;
-			aNode.setImage("../images/Wall.jpg");
+			aNode.setImage("../images/wall.png");
+
 		}
 	}
 	
