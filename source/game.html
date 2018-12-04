@@ -85,14 +85,7 @@
 			
 			for(var i = 0; i < ENEMIES; i++) {
 
-				enemyList.push(new Enemy(game, "../images/penguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
-			}			
-			//priority is cost from node to neighbor, value is current minimum cost to a node
-			
-			//just for testing***************************
-			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
-			
-				enemyList.push(new Enemy(game, "../images/EskimoFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES)-10);
+				enemyList.push(new Enemy(game, "../images/PenguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));	
 				
 				randIndex = randNode();
 				randRow = randIndex[0];
