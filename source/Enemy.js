@@ -11,18 +11,18 @@ function Enemy(canvas, src, width, height) {
 		//initial best value is null with a cost of infinity
 		var currentBest = [null, Infinity];
 		for(var i = 0; i < start.neighbors.length; i++) {
-			var xLeft = Math.abs(goal.x - start.x);
-			var yLeft = Math.abs(goal.y - start.y);
+			var xLeft = Math.abs(goal.x - start.neighbors[i].x);
+			var yLeft = Math.abs(goal.y - start.neighbors[i].y);
 			
-			value = x + y;
+			value = xLeft + yLeft;
 			//the current value will be replaced if it is higher
-			if(value > currentBest[1]) {
+			if(value < currentBest[1]) {
 				currentBest[0] = i;
 				currentBest[1] = value;
 			}
 		}
 		console.log(currentBest);
-		calculateMove(start, currentBest);
+		aEnemy.calculateMove(start, currentBest);
 	}
 		
 	aEnemy.calculateMove = function(start, currentBest) {
