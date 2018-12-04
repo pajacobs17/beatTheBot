@@ -89,7 +89,17 @@
 				enemyList.push(new Enemy(game, "../images/PenguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));	
 				
 				//finds the random index of a node from the board
-				randIndex = randNode();
+				var randRow;
+				var randCol;
+				var randIndex = randNode();
+				
+				
+				while(randIndex[0] >= board.length - 3 || randIndex[1] >= board.length - 3) {
+					randIndex = randNode();
+				}
+				
+				console.log(randIndex);
+				
 				randRow = randIndex[0];
 				randCol = randIndex[1];
 				
