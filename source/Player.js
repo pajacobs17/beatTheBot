@@ -1,36 +1,36 @@
 function Player(canvas, src, width, height, walls) {
-	
+
 	var aPlayer = new Sprite(canvas, src, width, height);
-	
+
 	aPlayer.setSpeed(5);
 	aPlayer.setBoundAction(STOP);
-	
+
 	aPlayer.walls = walls;
-	
-	aPlayer.checkKeys = function(){
+
+	aPlayer.checkKeys = function () {
 		//temporary function for testing
-		if (keysDown[K_UP]){
+		if (keysDown[K_UP]) {
 			this.changeYby(-5);
-			// this.setImage("img/Brandy-Back.png")
+			this.setImage("../images/EskimoBack.png")
 		}
-		
-		if (keysDown[K_DOWN]){
+
+		if (keysDown[K_DOWN]) {
 			this.changeYby(5);
-			 //this.setImage("img/Brandy-Forward.png")
+			this.setImage("../images/EskimoFront.png")
 		}
-		
-		if (keysDown[K_LEFT]){
-		   //this.setImage("img/Brandy-Left.png")
+
+		if (keysDown[K_LEFT]) {
 			this.changeXby(-5);
+			this.setImage("../images/EskimoLeft.png")
 		}
-		
-		if (keysDown[K_RIGHT]){
-			//this.setImage("img/Brandy-Right.png")
+
+		if (keysDown[K_RIGHT]) {
 			this.changeXby(5);
+			this.setImage("../images/EskimoRight.png")
 		}
 	} // end checkKeys
-	
-	
-	
+
+
+
 	return aPlayer;
 }

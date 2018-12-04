@@ -6,6 +6,7 @@
 	<meta name="viewport" content="width=device-width">
 	<title>Welcome</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
 	<script src = "engine/simpleGame_1_0.js"></script>
 
 	<!--SCRIPTS -->
@@ -26,6 +27,12 @@
 </head>
 
 <body onload="init()" style="background-color: #003366;">
+	<div id="scoreBoard">
+		<a href="welcome.html">
+			  <span class="glyphicon glyphicon-arrow-left"></span> BACK
+			</a>
+		</div>
+
 
 	<script>
 		var queue = new Queue();
@@ -64,7 +71,8 @@
 			//get the canvas elements for the game to allow for dynamic resizing
 			var all = document.getElementsByTagName("canvas");
 			canvas = all[0];
-			
+			canvas.setAttribute("id", "gameCanvas");
+
 			canvas.addEventListener("click", onClick, false);
 			
 			//settting background
@@ -75,7 +83,7 @@
 			createBoard();
 			
 			for(var i = 0; i < ENEMIES; i++) {
-				enemyList.push(new Enemy(game, "../images/Enemy.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
+				enemyList.push(new Enemy(game, "../images/penguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));
 			}			
 			//priority is cost from node to neighbor, value is current minimum cost to a node
 			
@@ -83,15 +91,14 @@
 			enemyList[0].setPosition(canvas.clientHeight/SQUARES, canvas.clientHeight/SQUARES);
 			
 
-			player = new Player(game, "../images/Player.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES, SQUARES * 3);
+			player = new Player(game, "../images/EskimoFront.png", canvas.clientWidth/(SQUARES*2), (canvas.clientHeight/SQUARES)-10, SQUARES * 3);
 			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
 			//create all the fish objects
 			for(var i = 0; i < FISH; i++) {
-				fishList[i] = new Sprite(game, "../images/fish.jpg", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
+				fishList[i] = new Sprite(game, "../images/fishOne.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
 				var pos = randNode();
 				//makes the fishes location the same as a square (or node) on the board
-				console.log(pos[0] + ", " + pos[1]);
 				fishList[i].x = board[pos[0]][pos[1]].x;
 				fishList[i].y = board[pos[0]][pos[1]].y;
 			}
@@ -106,8 +113,12 @@
 		
 		//function to handle when the canvas is clicked, e is the click event
 		function onClick(e) {
-			var x = event.x - canvas.offsetLeft;
-			var y = event.y - canvas.offsetTop;
+			var squareHeight = canvas.clientHeight/SQUARES;
+			var squareWidth = canvas.clientWidth/SQUARES;
+
+			var x = event.x - (1.75 * squareWidth);
+			var y = event.y - (1.75 * squareHeight);
+
 			//if the player has walls remainign
 			if(player.walls > 0) {
 				//if a wall was placed, remove a wall from the player's inventory
@@ -144,7 +155,7 @@
 				board[columnIndex] = new Array();
 				//adds the node at the given row and column
 				for(var j = squareWidth/2; j <= canvas.clientWidth; j += squareWidth) {
-					board[columnIndex][rowIndex] = new Node(game, "../images/Square.jpg", squareWidth, squareHeight);
+					board[columnIndex][rowIndex] = new Node(game, "../images/Color.png", squareWidth, squareHeight);
 					board[columnIndex][rowIndex].setPosition(j, i);
 					rowIndex++;	
 				}
@@ -155,13 +166,14 @@
 			}
 		}	
 		
-		function nodeClicked(x, y) {	
+		function nodeClicked(x, y) {
 			//i will create a sprite at the location of the click and test it against each node to detect collision
 			var tempSprite = new Sprite(game, "../images/collision.jpg", 1, 1);
 			//set position to the location clicked and draw it
 			tempSprite.setPosition(x, y);
 			tempSprite.update();
 			
+
 			if(tempSprite.collidesWith(player)) {
 				return false;
 			}
@@ -240,7 +252,6 @@
 				
 				var seconds = Math.floor((timeLeft % (1000 * 60))/1000);
 				//**************************** output to html element **********************
-				console.log(seconds)
 				
 				if(timeLeft <= 0) {
 					clearInterval(sec);
