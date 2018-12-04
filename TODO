@@ -1,8 +1,2 @@
-have brandy create the sprites. 
-have brandy create the counter for the # of walls remaining
-
-create the graph
-dijstras
-tie dijkstras to the enemy decisions
-place the items on the map
-set-up win condition
+handle when a player touches an ice block
+boundary conditions? 

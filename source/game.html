@@ -72,6 +72,7 @@
 			canvas = all[0];
 			canvas.setAttribute("id", "gameCanvas");
 
+			//to allow the switching of nodes to walls when a player clicks
 			canvas.addEventListener("click", onClick, false);
 			
 			//settting background
@@ -79,12 +80,15 @@
 			
 			board = new Array();
 			
+			//creates the board as a 2D array full of Node sprites
 			createBoard();
 			
+			//this will initialize the penguins and place them in random locations on the board
 			for(var i = 0; i < ENEMIES; i++) {
 
 				enemyList.push(new Enemy(game, "../images/PenguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));	
 				
+				//finds the random index of a node from the board
 				randIndex = randNode();
 				randRow = randIndex[0];
 				randCol = randIndex[1];
@@ -94,8 +98,9 @@
 				
 				enemyList[i].setPosition(x, y);
 			}
-
-				player = new Player(game, "../images/EskimoFront.png", canvas.clientWidth/(SQUARES*2), (canvas.clientHeight/SQUARES)-10, SQUARES * 3);
+		
+			//creates a player object, always puts it in the bottom right corner
+			player = new Player(game, "../images/EskimoFront.png", canvas.clientWidth/(SQUARES*2), (canvas.clientHeight/SQUARES)-12, SQUARES * 3);
 
 			player.setPosition(canvas.clientWidth - canvas.clientWidth/SQUARES, canvas.clientHeight - canvas.clientHeight/SQUARES);
 			
@@ -103,7 +108,7 @@
 			for(var i = 0; i < FISH; i++) {
 				fishList[i] = new Sprite(game, "../images/FishOne.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
 				var pos = randNode();
-				//makes the fishes location the same as a square (or node) on the board
+				//makes the fishes location the same as some random square (or node) on the board
 				fishList[i].x = board[pos[0]][pos[1]].x;
 				fishList[i].y = board[pos[0]][pos[1]].y;
 			}
@@ -111,9 +116,8 @@
 			//Set up Scoreboard
 			document.getElementById("numOfWalls").innerHTML = player.walls;
 			
+			//creates the graph of nodes with neighbors
 			createGraph();
-			
-			setupPhase();
 			
             game.start();		
         }
@@ -231,8 +235,8 @@
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
 					if(board[i][j].collidesWith(player) && board[i][j].isWall == true) {
-						//if/else for handling when a player runs into wall, currently not working
-						//***********************************
+						console.log("hi");
+						window.location.replace("lose.html");
 					}
 					board[i][j].update();
 				}
@@ -281,25 +285,9 @@
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
 			}
+
 			player.draw();	
         }
-		
-		function setupPhase() {
-			var countTo = new Date().getTime() + TIMER;
-			
-			var sec = setInterval(function() {
-				var now = new Date().getTime();
-				
-				var timeLeft = countTo - now;
-				
-				var seconds = Math.floor((timeLeft % (1000 * 60))/1000);
-				//**************************** output to html element **********************
-				
-				if(timeLeft <= 0) {
-					clearInterval(sec);
-				}
-			}, 1000);
-		}
 
 		 /*
           check whether or not the player has colllided with a Gnome
