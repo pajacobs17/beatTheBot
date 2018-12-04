@@ -1,0 +1,14 @@
+//calculate every 5 frames
+//
+function targetLocation() {
+	//priority is initially equal to absolute value of position of bot - position of player
+	while neighbor != empty:
+		var x = abs(destinationX - sourceX)
+		var y = abs(destinationY - sourceY)
+		priority = x + y;
+		if(priority >= current priority):
+			bestMove = x,y;
+		else:
+			calculateNext(Node.nextNeighbor);
+
+}
