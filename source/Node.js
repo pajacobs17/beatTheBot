@@ -18,5 +18,6 @@ function Node(scene, src, width, height) {
 		}
 	}
 	
+	
 	return aNode;
 }

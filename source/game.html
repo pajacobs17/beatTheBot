@@ -156,30 +156,41 @@
 			}
 		}	
 		
-		function nodeClicked(x, y) {	
+		function drawTempSprite(x, y) {
 			//i will create a sprite at the location of the click and test it against each node to detect collision
 			var tempSprite = new Sprite(game, "../images/collision.jpg", 1, 1);
 			//set position to the location clicked and draw it
 			tempSprite.setPosition(x, y);
 			tempSprite.update();
 			
+			return tempSprite;
+		}
+		
+		
+		function nodeClicked(x, y) {	
+			//i will create a sprite at the location of the click and test it against each node to detect collision
+			var tempSprite = drawTempSprite(x, y);
+		
 			if(tempSprite.collidesWith(player)) {
+				player.setSpeed(0);
 				return false;
 			}
 		
-			
-			//checks to make sure that walls can't be placed where sprite currently are
+			//same for enemies
 			for(var i = 0; i < enemyList.length; i++) {
 				if(tempSprite.collidesWith(enemyList[i])) {
 					return false;
 				}
 			}
+			
 
 			//go through all the nodes, change the image of the node clicked
 			for(var i = 0; i < board.length; i++) {
 				for(var j = 0; j < board[i].length; j++) {
 					if(board[i][j].collidesWith(tempSprite) && board[i][j].isWall == false) {
-						board[i][j].makeWall()
+						board[i][j].makeWall();
+						//change the cost to infinity so AI will never move towards it
+						board[i][j].cost = Infinity;
 						return true;
 					}
 				}
@@ -191,8 +202,6 @@
         function update() {
 			//erase previous frame
 			game.clear();
-			
-			//var hitWall = false;
 			
 			//goes through all the nodes seeing if the player has hit any that are walls
 			//if the player has, set hitWall to true and that will be handled
@@ -219,9 +228,33 @@
 			checkWin();
 			
 			
-			//check for loss, when enemy sprite has hit player sprite
+			//iterates through each enemy in the enemyList
 			for(var i = 0; i < enemyList.length; i++) {
-			
+				//tempSprite1 will be used to see if the player is in the node
+				//tempSprite2 will be used to see if the enemy is in the node
+				//create them using the current x and y of the player and the current enemy
+				var tempSprite1 = drawTempSprite(player.x, player.y);
+				var tempSprite2 = drawTempSprite(enemyList[i].x, enemyList[i].y);
+				
+				var start;
+				var goal;
+				
+				for(var j = 0; j < board.length; j++) {
+					for(var k = 0; k < board[j].length; k++) {
+						//performance could be improved by removing this from the enemyList for loop potentially
+						//not necessarily worth it
+						if(board[j][k].collidesWith(tempSprite1)) {
+							goal = board[j][k];
+						}
+						if(board[j][k].collidesWith(tempSprite2)) {
+							start = board[j][k];
+						}
+					}
+				}
+
+				//calculates the nextMove for the enemy
+				enemyList[i].nextMove(start, goal);
+				//check for a loss and then draw the enemy
 				checkLoss(enemyList[i]);
 				enemyList[i].draw();	
 			}
@@ -270,30 +303,6 @@
 			alert("You have won");
 			
 			game.stop();
-		}
-		
-		//calculates the next node to move towards and then the movement in the x and y axis required to go towards
-		//that node. Sets the enemy to move in that x and y direction
-		function nextMove(start, goal, enemy) {
-			//keeps track of the currentBest neighborNode (given by its index of the start node) and its distance from the player
-			//initial best value is null with a cost of infinity
-			var currentBest = [null, Infinity];
-			for(var i = 0; i < start.neighbors.length; i++) {
-				var xLeft = Math.abs(goal.x - start.x);
-				var yLeft = Math.abs(goal.y - start.y);
-				
-				value = x + y;
-				//the current value will be replaced if it is higher
-				if(value > currentBest[1]) {
-					currentBest[0] = i;
-					currentBest[1] = value;
-				}
-			}
-			calculateMove(currentBest);
-		}
-		
-		function calculateMove(currentBest) {
-			//if(board[x] - 
 		}
 		
 		function createGraph() {
