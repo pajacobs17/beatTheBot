@@ -89,17 +89,17 @@
 				enemyList.push(new Enemy(game, "../images/PenguinFront.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES));	
 				
 				//finds the random index of a node from the board
+				//created these outside while loop for scoping reasons
 				var randRow;
 				var randCol;
 				var randIndex = randNode();
 				
-				
+				//ensures enemies won't spawn on top of player
 				while(randIndex[0] >= board.length - 3 || randIndex[1] >= board.length - 3) {
 					randIndex = randNode();
 				}
 				
-				console.log(randIndex);
-				
+				//grab random node for each enemy
 				randRow = randIndex[0];
 				randCol = randIndex[1];
 				
