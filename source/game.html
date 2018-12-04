@@ -14,17 +14,11 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	
-	<!-- priority queue script -->
-	<script src="https://unpkg.com/tinyqueue@2.0.0/tinyqueue.min.js"></script>
-	
 	<!-- class files -->
 	<script src="Enemy.js"></script>
 	<script src="Player.js"></script>
 	<script src="Node.js"></script>
-	<script src="priority-queue.js"></script>
-	<script src="Queue.js"></script>
-	<!--<script src="PriorityQueue.js"></script> -->
-	
+
 </head>
 
 <body onload="init()" style="background-color: #003366;">
@@ -41,7 +35,6 @@
 
 
 	<script>
-		var queue = new Queue();
 		//determines the number of enemies on the board
 		var ENEMIES = 4;
 		//timer refers to the miliseonds for the set-up timer, is in the setUpPhase function
@@ -108,7 +101,7 @@
 			
 			//create all the fish objects
 			for(var i = 0; i < FISH; i++) {
-				fishList[i] = new Sprite(game, "../images/fishOne.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
+				fishList[i] = new Sprite(game, "../images/FishOne.png", canvas.clientWidth/SQUARES, canvas.clientHeight/SQUARES);
 				var pos = randNode();
 				//makes the fishes location the same as a square (or node) on the board
 				fishList[i].x = board[pos[0]][pos[1]].x;

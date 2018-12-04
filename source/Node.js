@@ -12,7 +12,7 @@ function Node(scene, src, width, height) {
 	aNode.makeWall = function () {
 		if(aNode.isWall == false) {
 			aNode.isWall = true;
-			aNode.setImage("../images/wall.png");
+			aNode.setImage("../images/Wall.png");
 
 		}
 	}

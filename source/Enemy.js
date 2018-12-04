@@ -23,8 +23,6 @@ function Enemy(canvas, src, width, height) {
 				}
 			}
 		}
-		//console.log(currentBest);
-		//console.log(start);
 		//pass on the neighbor number that will be the enemies new target
 		aEnemy.calculateMove(start, currentBest[0]);
 	}
@@ -35,9 +33,6 @@ function Enemy(canvas, src, width, height) {
 			//now to calculate the movement in the x and y required for the enemy
 			var x = moveTowards.x - start.x;
 			var y = moveTowards.y - start.y;
-		
-			console.log("x, y: " + x + ", " + y);
-			console.log(moveTowards);
 			
 			if(x > 0) {
 				aEnemy.changeXby(5);
@@ -46,12 +41,10 @@ function Enemy(canvas, src, width, height) {
 				aEnemy.changeXby(-5);
 			}
 			else if(y > 0) {
-				console.log("y` is +");
 				aEnemy.changeYby(5);
 			}
 			//y < 0
 			else {
-				console.log("y is -");
 				aEnemy.changeYby(-5);
 			}
 		}
